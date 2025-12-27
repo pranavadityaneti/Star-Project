@@ -10,25 +10,31 @@ import { BottomNav } from './components/BottomNav';
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<ScreenName>('feed');
   const [showCreatePost, setShowCreatePost] = useState(false);
+  const [language, setLanguage] = useState('EN');
 
-  // Based on the screenshots:
-  // Feed & Arena are Dark
-  // Events, Create Post, Profile are Light
-  // We handle the background class in the individual screens, but we need to tell BottomNav how to style itself.
-  const isDarkScreen = currentScreen === 'feed' || currentScreen === 'arena';
+  // All screens are now light mode based on the request
+  const isDarkScreen = false;
 
   const renderScreen = () => {
     switch (currentScreen) {
       case 'feed':
-        return <FeedScreen onCreatePost={() => setShowCreatePost(true)} />;
+        return <FeedScreen 
+          onCreatePost={() => setShowCreatePost(true)} 
+          language={language}
+          onLanguageChange={setLanguage}
+        />;
       case 'arena':
-        return <ArenaScreen />;
+        return <ArenaScreen language={language} />;
       case 'events':
-        return <EventsScreen />;
+        return <EventsScreen language={language} />;
       case 'profile':
-        return <ProfileScreen />;
+        return <ProfileScreen language={language} />;
       default:
-        return <FeedScreen onCreatePost={() => setShowCreatePost(true)} />;
+        return <FeedScreen 
+          onCreatePost={() => setShowCreatePost(true)} 
+          language={language}
+          onLanguageChange={setLanguage}
+        />;
     }
   };
 
@@ -42,12 +48,13 @@ export default function App() {
         <CreatePostScreen onClose={() => setShowCreatePost(false)} />
       )}
 
-      {/* Navigation - Always visible unless CreatePost is open (though in many apps it might hide, sticking to layout) */}
+      {/* Navigation - Always visible unless CreatePost is open */}
       {!showCreatePost && (
         <BottomNav 
           currentScreen={currentScreen} 
           onNavigate={setCurrentScreen} 
           isDark={isDarkScreen}
+          language={language}
         />
       )}
     </div>
